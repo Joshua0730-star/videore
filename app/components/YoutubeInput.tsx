@@ -71,8 +71,12 @@ export default function YoutubeInput() {
       }
 
       setTranscription(data);
-    } catch (err: any) {
-      setError(err.message || "Ocurrió un error al procesar el video");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Ocurrió un error al procesar el video";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -113,9 +117,13 @@ export default function YoutubeInput() {
 
       const data = await response.json();
       setSummary(data.summary);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error generating summary:", err);
-      setSummaryError(err.message || "Ocurrió un error al generar el resumen");
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Ocurrió un error al generar el resumen";
+      setSummaryError(message);
     } finally {
       setIsGeneratingSummary(false);
     }

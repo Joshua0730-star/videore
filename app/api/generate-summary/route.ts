@@ -71,13 +71,15 @@ export async function POST(request: Request) {
         return NextResponse.json({
             summary: response.choices[0].message.content
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error generating summary:', error);
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        const stack = error instanceof Error ? error.stack : undefined;
         return NextResponse.json(
             {
                 error: 'Error al generar el resumen',
-                details: error.message,
-                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+                details: message,
+                stack: process.env.NODE_ENV === 'development' ? stack : undefined
             },
             { status: 500 }
         );
